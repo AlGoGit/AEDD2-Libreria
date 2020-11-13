@@ -18,6 +18,7 @@ public class TClasificador {
     public static final int METODO_CLASIFICACION_SHELL = 2;
     public static final int METODO_CLASIFICACION_BURBUJA = 3;
     public static final int METODO_CLASIFICACION_QUICKSORT = 4;
+    public static final int METODO_CLASIFICACION_HEAPSORT = 5;
 
     /**
      * Punto de entrada al clasificador
@@ -41,6 +42,8 @@ public class TClasificador {
                 return ordenarPorBurbuja(datosParaClasificar);
             case METODO_CLASIFICACION_QUICKSORT:
                 return ordenarPorQuickSort(datosParaClasificar);
+            case METODO_CLASIFICACION_HEAPSORT:
+                return ordenarPorHeapSort(datosParaClasificar);
             default:
                 System.err.println("Este codigo no deberia haberse ejecutado");
                 break;
@@ -173,80 +176,101 @@ public class TClasificador {
         return datosParaClasificar;
     }
 
+    protected int[] ordenarPorHeapSort(int[] datosParaClasificar) {
+        for (int i = (datosParaClasificar.length - 1) / 2; i >= 0; i--) { //Armo el heap inicial de n-1 div 2 hasta 0
+            armaHeap(datosParaClasificar, i, datosParaClasificar.length - 1);
+        }
+        for (int i = datosParaClasificar.length - 1; i > 0; i--) {
+            intercambiar(datosParaClasificar, 0, i);
+            armaHeap(datosParaClasificar, 0, i - 1);
+        }
+        return datosParaClasificar;
+    }
+
+    private void armaHeap(int[] datosParaClasificar, int primero, int ultimo) {
+        if (primero < ultimo) {
+            int r = primero;
+            while (r <= ultimo / 2) {
+                if (ultimo == 2 * r) { //r tiene un hijo solo
+                    if (datosParaClasificar[r] < datosParaClasificar[r * 2]) {
+                        intercambiar(datosParaClasificar, r, 2 * r);
+                    }
+                    r = ultimo;
+                } else { //r tiene 2 hijos
+                    int posicionIntercambio = 0;
+                    if (datosParaClasificar[2 * r] > datosParaClasificar[2 * r + 1]) {
+                        posicionIntercambio = 2 * r;
+                    } else {
+                        posicionIntercambio = 2 * r + 1;
+                    }
+                    if (datosParaClasificar[r] < datosParaClasificar[posicionIntercambio]) {
+                        intercambiar(datosParaClasificar, r, posicionIntercambio);
+                        r = posicionIntercambio;
+                    } else {
+                        r = ultimo;
+                    }
+                }
+            }
+        }
+    }
+
     public static void main(String args[]) {
+
+        int[] rangos = new int[]{300, 3000, 30000};
         TClasificador clasif = new TClasificador();
+
         GeneradorDatosGenericos gdg300 = new GeneradorDatosGenericos(300);
-        GeneradorDatosGenericos gdg10000 = new GeneradorDatosGenericos(10000);
+        GeneradorDatosGenericos gdg3000 = new GeneradorDatosGenericos(3000);
         GeneradorDatosGenericos gdg30000 = new GeneradorDatosGenericos(30000);
-        
+
         int[] vectorAleatorio300 = gdg300.generarDatosAleatorios();
         int[] vectorAscendente300 = gdg300.generarDatosAscendentes();
         int[] vectorDescendente300 = gdg300.generarDatosDescendentes();
 
-        int[] vectorAleatorio10000 = gdg10000.generarDatosAleatorios();
-        int[] vectorAscendente10000 = gdg10000.generarDatosAscendentes();
-        int[] vectorDescendente10000 = gdg10000.generarDatosDescendentes();
+        int[] vectorAleatorio3000 = gdg3000.generarDatosAleatorios();
+        int[] vectorAscendente3000 = gdg3000.generarDatosAscendentes();
+        int[] vectorDescendente3000 = gdg3000.generarDatosDescendentes();
 
         int[] vectorAleatorio30000 = gdg30000.generarDatosAleatorios();
         int[] vectorAscendente30000 = gdg30000.generarDatosAscendentes();
         int[] vectorDescendente30000 = gdg30000.generarDatosDescendentes();
 
-        boolean quitarCascara = true;
-        long segundo = 1000000000;
+        boolean quitarCascara = false;
+        long segundo = 300000000;
 
-        // 300 elementos
-        for (int i = 1; i <= 4; i++) {
-            int[] aleatorioCopia = vectorAleatorio300.clone();
-            int[] ascendenteCopia = vectorAscendente300.clone();
-            int[] descendenteCopia = vectorDescendente300.clone();
+        /*
+        // PRUEBAS
+        GeneradorDatosGenericos prueba = new GeneradorDatosGenericos(10);
+        int[] ordenPrueba = prueba.generarDatosAleatorios();
 
-            String cascaraMsg = quitarCascara ? " S/ CASCARA" : "";
-            System.out.println(getAlgorithmName(i) + cascaraMsg + " 300 ELEMENTOS");
+        clasif.ordenarPorHeapSort(ordenPrueba);
+        for (int i : ordenPrueba) {
+            System.out.println(i);
+        }
+         */
+        for (int r = 0; r < rangos.length; r++) {
+            for (int i = 1; i <= 5; i++) {
+                GeneradorDatosGenericos gdg = new GeneradorDatosGenericos(rangos[r]);
+                int[] vectorAleatorio = gdg.generarDatosAleatorios();
+                int[] vectorAscendente = gdg.generarDatosAscendentes();
+                int[] vectorDescendente = gdg.generarDatosDescendentes();
 
-            calcularTiempo("Tiempo Medio Ascendente", clasif, ascendenteCopia, i, segundo, quitarCascara);
+                int[] aleatorioCopia = vectorAleatorio.clone();
+                int[] ascendenteCopia = vectorAscendente.clone();
+                int[] descendenteCopia = vectorDescendente.clone();
 
-            calcularTiempo("Tiempo Medio Descendente", clasif, descendenteCopia, i, segundo, quitarCascara);
+                String cascaraMsg = quitarCascara ? " S/ CASCARA" : "";
+                System.out.println(getAlgorithmName(i) + cascaraMsg + " " + rangos[r] + " ELEMENTOS");
 
-            calcularTiempo("Tiempo Medio Aleatorio", clasif, aleatorioCopia, i, segundo, quitarCascara);
+                calcularTiempo("Tiempo Medio Ascendente", clasif, ascendenteCopia, i, segundo, quitarCascara);
 
-            System.out.println("");
+                calcularTiempo("Tiempo Medio Descendente", clasif, descendenteCopia, i, segundo, quitarCascara);
+
+                calcularTiempo("Tiempo Medio Aleatorio", clasif, aleatorioCopia, i, segundo, quitarCascara);
+                System.out.println("");
+            }
         }
 
-        // 10.000 elementos
-        for (int i = 1; i <= 4; i++) {
-            int[] aleatorioCopia = vectorAleatorio10000.clone();
-            int[] ascendenteCopia = vectorAscendente10000.clone();
-            int[] descendenteCopia = vectorDescendente10000.clone();
-
-            String cascaraMsg = quitarCascara ? " S/ CASCARA" : "";
-            System.out.println(getAlgorithmName(i) + cascaraMsg + " 10.000 ELEMENTOS");
-
-            calcularTiempo("Tiempo Medio Ascendente", clasif, ascendenteCopia, i, segundo, quitarCascara);
-
-            calcularTiempo("Tiempo Medio Descendente", clasif, descendenteCopia, i, segundo, quitarCascara);
-
-            calcularTiempo("Tiempo Medio Aleatorio", clasif, aleatorioCopia, i, segundo, quitarCascara);
-
-            System.out.println("");
-        }
-
-        // 30.000 elementos
-        for (int i = 1; i <= 4; i++) {
-            int[] aleatorioCopia = vectorAleatorio30000.clone();
-            int[] ascendenteCopia = vectorAscendente30000.clone();
-            int[] descendenteCopia = vectorDescendente30000.clone();
-
-            String cascaraMsg = quitarCascara ? " S/ CASCARA" : "";
-            System.out.println(getAlgorithmName(i) + cascaraMsg + " 30.000 ELEMENTOS");
-
-            calcularTiempo("Tiempo Medio Ascendente", clasif, ascendenteCopia, i, segundo, quitarCascara);
-
-            calcularTiempo("Tiempo Medio Descendente", clasif, descendenteCopia, i, segundo, quitarCascara);
-
-            calcularTiempo("Tiempo Medio Aleatorio", clasif, aleatorioCopia, i, segundo, quitarCascara);
-
-            System.out.println("");
-        }
     }
 
     private static void calcularTiempo(String textoSalida, TClasificador clasif, int[] elementos, int algoritmo, long tiempoResolucion, boolean quitarCascara) {
@@ -288,6 +312,8 @@ public class TClasificador {
                 return "METODO_CLASIFICACION_BURBUJA";
             case 4:
                 return "METODO_CLASIFICACION_QUICKSORT";
+            case 5:
+                return "METODO_CLASIFICACION_HEAPSORT";
             default:
                 return "???";
         }
