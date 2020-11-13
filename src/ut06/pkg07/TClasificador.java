@@ -216,27 +216,10 @@ public class TClasificador {
 
     public static void main(String args[]) {
 
-        int[] rangos = new int[]{300, 3000, 30000};
         TClasificador clasif = new TClasificador();
-
-        GeneradorDatosGenericos gdg300 = new GeneradorDatosGenericos(300);
-        GeneradorDatosGenericos gdg3000 = new GeneradorDatosGenericos(3000);
-        GeneradorDatosGenericos gdg30000 = new GeneradorDatosGenericos(30000);
-
-        int[] vectorAleatorio300 = gdg300.generarDatosAleatorios();
-        int[] vectorAscendente300 = gdg300.generarDatosAscendentes();
-        int[] vectorDescendente300 = gdg300.generarDatosDescendentes();
-
-        int[] vectorAleatorio3000 = gdg3000.generarDatosAleatorios();
-        int[] vectorAscendente3000 = gdg3000.generarDatosAscendentes();
-        int[] vectorDescendente3000 = gdg3000.generarDatosDescendentes();
-
-        int[] vectorAleatorio30000 = gdg30000.generarDatosAleatorios();
-        int[] vectorAscendente30000 = gdg30000.generarDatosAscendentes();
-        int[] vectorDescendente30000 = gdg30000.generarDatosDescendentes();
-
+        int[] rangos = new int[]{300, 3000, 30000};
         boolean quitarCascara = false;
-        long segundo = 300000000;
+        long segundo = 100000000;
 
         /*
         // PRUEBAS
@@ -248,6 +231,8 @@ public class TClasificador {
             System.out.println(i);
         }
          */
+        
+        // CORRER PARA TODOS
         for (int r = 0; r < rangos.length; r++) {
             for (int i = 1; i <= 5; i++) {
                 GeneradorDatosGenericos gdg = new GeneradorDatosGenericos(rangos[r]);
