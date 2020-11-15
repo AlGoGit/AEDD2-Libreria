@@ -1,5 +1,5 @@
 /dist/
-/build/
+/build/**
 /src/Sufijos/build/
 /src/Sufijos/dist/
 /src/Sufijos/nbproject/private/
