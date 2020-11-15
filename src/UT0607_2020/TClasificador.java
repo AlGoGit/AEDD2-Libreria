@@ -9,9 +9,7 @@ package UT0607_2020;
  *
  * @author AlGo
  */
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TClasificador {
 
