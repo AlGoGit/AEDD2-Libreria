@@ -399,11 +399,13 @@ public class TClasificador {
      */
     public static void main(String args[]) {
         TClasificador clasif = new TClasificador();
-        boolean runAll = false;
-        boolean quitarCascara = false;
         int[] rangos = new int[]{300, 3000, 30000};
         long segundo = 100000000;
         int testValue = 9;
+        
+        // VARIABLES DE EJECUCIÓN
+        boolean runAll = true; // Habilitar para correr para todas las instancias de rangos todos los algoritmos.
+        boolean quitarCascara = false;
 
         // CORRER PARA TODOS
         if (runAll) {
